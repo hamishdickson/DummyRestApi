@@ -15,6 +15,8 @@ import java.util.Map;
 /**
  * Created by hamishdickson on 16/10/2014.
  *
+ * todo add servlet for swagger ui
+ * todo add servlet for general ui
  */
 public class Server {
     private static final int PORT = 8080;
