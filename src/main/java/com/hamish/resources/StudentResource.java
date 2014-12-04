@@ -4,11 +4,13 @@ import com.google.gson.Gson;
 import com.hamish.models.Student;
 import com.hamish.utils.HibernateUtil;
 import com.wordnik.swagger.annotations.Api;
+import com.wordnik.swagger.annotations.ApiParam;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
@@ -34,6 +36,28 @@ public class StudentResource {
         try {
             transaction = session.beginTransaction();
             List<Student> studentList = session.createQuery("FROM Student").list();
+            transaction.commit();
+
+            return Response.ok().entity(new Gson().toJson(studentList)).build();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return Response.status(Response.Status.NO_CONTENT).build();
+    }
+
+    @GET
+    @Path("/{id}")
+    @Produces(MediaType.APPLICATION_JSON)
+    public Response getSpecificStudent(@ApiParam(value = "Student id", required = true) @PathParam("id") int id) {
+
+        Session session = HibernateUtil.getSessionFactory().openSession();
+
+        Transaction transaction;
+
+        try {
+            transaction = session.beginTransaction();
+            List<Student> studentList = session.createQuery("FROM Student WHERE id = " + id).list();
             transaction.commit();
 
             return Response.ok().entity(new Gson().toJson(studentList)).build();
